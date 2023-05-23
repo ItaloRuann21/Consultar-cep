@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View, StyleSheet, TextInput } from "react-native";
-import { Input, Button, Text } from "react-native-elements";
-
-// Importa o módulo Axios para fazer requisições http
+import { View, StyleSheet, TextInput, Button } from "react-native";
+import { Input, Text } from "react-native-elements";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const TelaCEP = () => {
+  const navigation = useNavigation();
   const [cep, setCep] = useState("");
   const [address, setAddress] = useState(null);
   const [error, setError] = useState(null);
@@ -21,7 +21,6 @@ const TelaCEP = () => {
   };
 
   useEffect(() => {
-    // Carregando as informações de endereço salvas no AsyncStorage
     AsyncStorage.getItem("addressData").then((data) => {
       if (data) {
         setAddress(JSON.parse(data));
@@ -37,7 +36,7 @@ const TelaCEP = () => {
         setAddress(null);
         return;
       }
-
+  
       const response = await axios.get(
         `https://viacep.com.br/ws/${cleanCep}/json/`
       );
@@ -48,19 +47,26 @@ const TelaCEP = () => {
         setAddress(null);
         return;
       }
-
+  
       const addressData = {
         rua: response.data.logradouro,
         bairro: response.data.bairro,
         cidade: response.data.localidade,
         endereco: `${response.data.logradouro}, ${response.data.bairro}, ${response.data.localidade} - ${response.data.uf}`,
       };
-
-      // Armazenando as informações de endereço no AsyncStorage
+  
       await AsyncStorage.setItem("addressData", JSON.stringify(addressData));
-
+  
+      // Adicionar CEP pesquisado ao histórico
+      const historicoCEP = await AsyncStorage.getItem("historicoCEP");
+      const historico = historicoCEP ? JSON.parse(historicoCEP) : [];
+      const novoItemHistorico = { cep: cleanCep, ...addressData };
+      historico.unshift(novoItemHistorico); // Adicionar no início do array
+      await AsyncStorage.setItem("historicoCEP", JSON.stringify(historico));
+  
       setAddress(addressData);
       setError(null);
+
     } catch (error) {
       console.error(error);
       setError(
@@ -69,10 +75,21 @@ const TelaCEP = () => {
       setAddress(null);
     }
   };
+  
+
+  
+  
 
   return (
     //view para fundo
     <View style={styles.container1}>
+      <View style={{ flexDirection: "column" }}><Button
+        title="Histórico"
+        onPress={() => navigation.navigate("TelaHistoricoCEP")}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonText}
+      />
+      </View>
       <Text style={styles.title}>Consultar CEP</Text>
       <View style={styles.container2}>
         <Text style={styles.label}>Digite seu CEP</Text>
@@ -87,6 +104,7 @@ const TelaCEP = () => {
           />
         </View>
         <View style={{ flexDirection: "column" }}>
+        
           <Button
             title="Consultar"
             onPress={searchAddress}
@@ -94,7 +112,7 @@ const TelaCEP = () => {
             titleStyle={styles.buttonText}
           />
 
-          <Button
+          {/* <Button
             title="Limpar"
             onPress={() => {
               setAddress(null);
@@ -102,7 +120,7 @@ const TelaCEP = () => {
             }}
             buttonStyle={styles.clearButton}
             titleStyle={styles.clearButtonText}
-          />
+          /> */}
         </View>
       </View>
       {error ? (
@@ -118,7 +136,7 @@ const TelaCEP = () => {
           <Text style={styles.addressLabel}>Endereço:</Text>
           <Text style={styles.addressText}>{address.endereco}</Text>
 
-          {/* <Button
+          <Button
             title="Limpar"
             onPress={() => {
               setAddress(null);
@@ -126,12 +144,14 @@ const TelaCEP = () => {
             }}
             buttonStyle={styles.clearButton}
             titleStyle={styles.clearButtonText}
-          /> */}
+          />
         </View>
       ) : null}
     </View>
   );
 };
+
+
 
 // Estilos do Aplicativo
 const styles = StyleSheet.create({
@@ -140,7 +160,7 @@ const styles = StyleSheet.create({
     height: "100%",
     botton: 0,
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#d8d8cffa',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     marginTop: 70,
@@ -216,7 +236,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 40,
     width: 100,
-    marginLeft: 240,
     marginTop: 45,
   },
   clearButtonText: {
