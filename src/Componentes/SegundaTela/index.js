@@ -22,10 +22,6 @@ const TelaHistoricoCEP = () => {
     getHistorico();
   }, []);
 
-  const navigateToCEPDetails = (cep) => {
-    navigation.navigate("CEPDetails", { cep });
-  };
-
   const clearHistorico = async () => {
     try {
       await AsyncStorage.removeItem("historicoCEP");
@@ -42,25 +38,13 @@ const TelaHistoricoCEP = () => {
       </TouchableOpacity>
       <ScrollView style={styles.scrollContainer}>
         {historico.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.cepButton}
-            onPress={() => navigateToCEPDetails(item.cep)}
-          >
-            <Text style={styles.cepButtonText}>CEP: {item.cep}</Text>
-            <Text style={styles.addressText}>
-              Rua: {item.rua}
-            </Text>
-            <Text style={styles.addressText}>
-              Bairro: {item.bairro}
-            </Text>
-            <Text style={styles.addressText}>
-              Cidade: {item.cidade}
-            </Text>
-            <Text style={styles.addressText}>
-              Endereço: {item.endereco}
-            </Text>
-          </TouchableOpacity>
+          <View key={index} style={styles.cepContainer}>
+            <Text style={styles.cepText}>CEP: {item.cep}</Text>
+            <Text style={styles.addressText}>Rua: {item.rua}</Text>
+            <Text style={styles.addressText}>Bairro: {item.bairro}</Text>
+            <Text style={styles.addressText}>Cidade: {item.cidade}</Text>
+            <Text style={styles.addressText}>Endereço: {item.endereco}</Text>
+          </View>
         ))}
       </ScrollView>
     </View>
@@ -78,17 +62,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  cepButton: {
+  cepContainer: {
     backgroundColor: "#eaeaea",
     padding: 10,
     marginBottom: 10,
   },
-  cepButtonText: {
+  cepText: {
     fontSize: 16,
     fontWeight: "bold",
   },
