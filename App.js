@@ -7,33 +7,24 @@ import TelaHistoricoCEP from "./src/Componentes/SegundaTela";
 
 const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#497FDE",
-    paddingTop: 80,
-  },
-});
-
 const App = () => {
   return (
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Consultador de CEP"
+            name="Consultar de CEP"
             component={TelaCEP}
             options={{
-              title: "Consultador de CEP",
-              headerShown: false, // Oculta o cabeçalho da tela
+              title: "Consultar de CEP",
+              headerShown: false
             }}
           />
           <Stack.Screen
             name="TelaHistoricoCEP"
             component={TelaHistoricoCEP}
             options={{
-              title: "Histórico de consultas",
-              // Deixe as opções vazias para usar o estilo padrão do cabeçalho
+              title: "Histórico de consulta",
             }}
           />
         </Stack.Navigator>
@@ -41,5 +32,12 @@ const App = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#497FDE",
+  },
+});
 
 export default App;

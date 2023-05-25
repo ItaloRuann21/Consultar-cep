@@ -57,15 +57,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
+
   },
   scrollContainer: {
     flex: 1,
     width: "100%",
   },
   cepContainer: {
-    backgroundColor: "#eaeaea",
+    backgroundColor: '#d8d8cffa',
     padding: 10,
     marginBottom: 10,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+
   },
   cepText: {
     fontSize: 16,
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   clearButton: {
-    backgroundColor: "#f44336",
+    backgroundColor: "#2196f3",
     padding: 10,
     marginTop: 10,
     marginBottom: 10,

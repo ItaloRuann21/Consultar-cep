@@ -36,7 +36,7 @@ const TelaCEP = () => {
         setAddress(null);
         return;
       }
-  
+
       const response = await axios.get(
         `https://viacep.com.br/ws/${cleanCep}/json/`
       );
@@ -47,23 +47,23 @@ const TelaCEP = () => {
         setAddress(null);
         return;
       }
-  
+
       const addressData = {
         rua: response.data.logradouro,
         bairro: response.data.bairro,
         cidade: response.data.localidade,
         endereco: `${response.data.logradouro}, ${response.data.bairro}, ${response.data.localidade} - ${response.data.uf}`,
       };
-  
+
       await AsyncStorage.setItem("addressData", JSON.stringify(addressData));
-  
+
       // Adicionar CEP pesquisado ao histórico
       const historicoCEP = await AsyncStorage.getItem("historicoCEP");
       const historico = historicoCEP ? JSON.parse(historicoCEP) : [];
       const novoItemHistorico = { cep: cleanCep, ...addressData };
       historico.unshift(novoItemHistorico); // Adicionar no início do array
       await AsyncStorage.setItem("historicoCEP", JSON.stringify(historico));
-  
+
       setAddress(addressData);
       setError(null);
 
@@ -75,10 +75,10 @@ const TelaCEP = () => {
       setAddress(null);
     }
   };
-  
 
-  
-  
+
+
+
 
   return (
     //view para fundo
@@ -104,7 +104,7 @@ const TelaCEP = () => {
           />
         </View>
         <View style={{ flexDirection: "column" }}>
-        
+
           <Button
             title="Consultar"
             onPress={searchAddress}
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
+
   },
   addressContainer: {
     alignItems: "center",
@@ -217,6 +218,7 @@ const styles = StyleSheet.create({
   addressText: {
     fontSize: 18,
     marginBottom: 5,
+
   },
   errorText: {
     color: "red",
@@ -230,6 +232,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     marginTop: 20,
+
   },
   clearButton: {
     backgroundColor: "#f44336",
@@ -240,6 +243,7 @@ const styles = StyleSheet.create({
   },
   clearButtonText: {
     fontSize: 16,
+
   },
 });
 
